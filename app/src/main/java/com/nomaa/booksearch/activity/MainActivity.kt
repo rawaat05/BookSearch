@@ -5,6 +5,8 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.Observer
@@ -61,6 +63,9 @@ class MainActivity : AppCompatActivity() {
         mBooksViewModel = ViewModelProvider(this).get(BookViewModel::class.java)
         mBooksViewModel.mBooks.observe(this,
             Observer<List<Book>> { books -> mAdapter?.books = books })
+        mBooksViewModel.isProgressVisible.observe(this, Observer { visible ->
+            progress.visibility = if (visible) VISIBLE else GONE
+        })
     }
 
     override fun onNewIntent(intent: Intent?) {
