@@ -19,11 +19,14 @@ class BookViewModel : ViewModel(), RestApiResponseListener {
         of the live data is updated which then sends the new value to the registered observers
      */
     internal var mBooks: MutableLiveData<List<Book>> = MutableLiveData()
+    val isProgressVisible = MutableLiveData<Boolean>().apply { value = false }
 
     /**
      * Calls [BooksRepository.getVolumes] with the passed [queryString] string
      */
     fun downloadVolume(queryString: String) {
+        isProgressVisible.value = true
+
         BooksRepository.getVolumes(
             queryString,
             BuildConfig.Books_API_KEY, this
@@ -44,9 +47,11 @@ class BookViewModel : ViewModel(), RestApiResponseListener {
             // Set the new data on the live data object
             mBooks.value = books
         }
+
+        isProgressVisible.value = false
     }
 
     override fun onResponseFailed() {
-
+        isProgressVisible.value = false
     }
 }
